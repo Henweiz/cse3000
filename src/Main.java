@@ -106,10 +106,10 @@ public class Main {
         Branch rootBranch = new Branch();
 
         Solver solver = new Solver(dataset, 10000, depth);
-        BinaryTree.Node best = solver.solveSubtree(dataset, rootBranch, depth, nodes, Double.MAX_VALUE);
+        BinaryTree.Node best = solver.solveSubtree(dataset, rootBranch, depth, nodes, Integer.MAX_VALUE);
 
         //BinaryTree tree = computeThreeNodes(dataset);
-        System.out.println("Misclassification score: " + best.getMc());
+        System.out.println("Misclassification score: " + ((double) best.getMc()/100));
         System.out.println("number of nodes in tree " + best.getTotalNodes());
         System.out.println("cache entries: " + solver.cache.getNumEntries());
 
@@ -201,7 +201,7 @@ public class Main {
                 int txtLabel = 0;
 
                 int skipcount = 0;
-                double[] solutions = new double[numOfSolutions];
+                int[] solutions = new int[numOfSolutions];
                 ArrayList<Integer> list = new ArrayList<>();
                 int count = 0;
                 for (String s : data.split(" ")) {
@@ -215,7 +215,7 @@ public class Main {
                             skipcount++;
                             continue;
                         }
-                        solutions[count] = Double.parseDouble(s);
+                        solutions[count] = (int) (Double.parseDouble(s) * 100);
                         count++;
                     } else {
                         list.add(Integer.parseInt(s));
@@ -223,7 +223,7 @@ public class Main {
                 }
 
                 // Get the most optimal algorithm.
-                double min = Double.MAX_VALUE;
+                int min = Integer.MAX_VALUE;
                 for (int i = 0; i < numOfSolutions; i++) {
                     if (min > solutions[i]) {
                         min = solutions[i];
@@ -261,7 +261,7 @@ public class Main {
                 String data = myReader.nextLine();
                 boolean isLabel = true;
                 int txtLabel = 0;
-                double[] solutions = new double[numOfSolutions];
+                int[] solutions = new int[numOfSolutions];
                 ArrayList<Integer> list = new ArrayList<>();
                 int count = 0;
                 for (String s : data.split(" ")) {
@@ -271,7 +271,7 @@ public class Main {
                     }
                     // Count the algorithm runtimes.
                     if (isLabel) {
-                        solutions[count] = Double.parseDouble(s);
+                        solutions[count] = (int) (Double.parseDouble(s) * 100);
                         count++;
                     } else {
                         list.add(Integer.parseInt(s));

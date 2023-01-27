@@ -11,11 +11,11 @@ public class BinaryTree {
         int label;
         int left;
         int right;
-        double mc;
+        int mc;
 
         Node rightNode;
         Node leftNode;
-        public Node(int feature, int label, double mc){
+        public Node(int feature, int label, int mc){
             //Assign data to the new node, set left and right children to null
             this.feature = feature;
             this.label = label;
@@ -26,7 +26,7 @@ public class BinaryTree {
             this.rightNode = null;
         }
 
-        public Node(int feature, int label, double mc, int left, int right){
+        public Node(int feature, int label, int mc, int left, int right){
             //Assign data to the new node
             this.feature = feature;
             this.label = label;
@@ -53,7 +53,7 @@ public class BinaryTree {
         }
 
         public boolean isFeasible(){
-            return this.mc != Double.MAX_VALUE;
+            return this.mc != Integer.MAX_VALUE;
         }
 
         public int getLeftSize() {
@@ -72,11 +72,11 @@ public class BinaryTree {
             return feature;
         }
 
-        public double getMc() {
+        public int getMc() {
             return mc;
         }
 
-        public void setMc(double mc) {
+        public void setMc(int mc) {
             this.mc = mc;
         }
 
@@ -97,7 +97,7 @@ public class BinaryTree {
         }
 
         public static BinaryTree.Node createInfeasibleNode() {
-            return new BinaryTree.Node(Integer.MAX_VALUE, Integer.MAX_VALUE, Double.MAX_VALUE);
+            return new BinaryTree.Node(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
         }
 
         public int computeMisclassification(ASPDataset dataset) {
@@ -182,7 +182,7 @@ public class BinaryTree {
 
     public Node root;
 
-    private double ms;
+    private int ms;
 
     public BinaryTree(){
         root = null;
@@ -202,7 +202,7 @@ public class BinaryTree {
         this.ms = ms;
     }
 
-    public double getMS(){
+    public int getMS(){
         return this.ms;
     }
 }

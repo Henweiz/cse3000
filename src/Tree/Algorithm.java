@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Algorithm {
 
-    private double totalRunTime;
-    private final double[] freqCounter;
-    private final double[][] freqCounterPair;
+    private int totalRunTime;
+    private final int[] freqCounter;
+    private final int[][] freqCounterPair;
 
     private int label;
 
@@ -15,8 +15,8 @@ public class Algorithm {
 
     public Algorithm(int size, int label) {
         this.totalRunTime = 0;
-        this.freqCounter = new double[size];
-        this.freqCounterPair = new double[size][size];
+        this.freqCounter = new int[size];
+        this.freqCounterPair = new int[size][size];
         this.label = label;
         this.calculated = false;
     }
@@ -62,11 +62,11 @@ public class Algorithm {
         calculated = true;
     }
 
-    public double[] getFreqCounter() {
+    public int[] getFreqCounter() {
         return freqCounter;
     }
 
-    public double[][] getFreqCounterPair() {
+    public int[][] getFreqCounterPair() {
         return freqCounterPair;
     }
 
@@ -74,7 +74,7 @@ public class Algorithm {
         return label;
     }
 
-    public double getTotalRunTime() {
+    public int getTotalRunTime() {
         return totalRunTime;
     }
 }

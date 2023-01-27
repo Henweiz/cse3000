@@ -34,12 +34,12 @@ public class LowerBoundCalculator {
         }
     }
 
-    public Pair<Boolean, Double> computeLowerBound(ASPDataset dataset, Branch branch, int depth, int nodes, Cache cache) {
+    public Pair<Boolean, Integer> computeLowerBound(ASPDataset dataset, Branch branch, int depth, int nodes, Cache cache) {
         boolean check = false;
-        double lowerbound = 0;
+        int lowerbound = 0;
 
         for (ArchiveEntry entry : archive[depth].entries) {
-            double lb = cache.getLowerBound(entry.branch, depth, nodes);
+            int lb = cache.getLowerBound(entry.branch, depth, nodes);
             if (entry.data.getSize() > dataset.getSize() && entry.data.getSize() - dataset.getSize() >= lb) {
                 continue;
             }

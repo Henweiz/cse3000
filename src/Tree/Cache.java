@@ -37,14 +37,14 @@ public class Cache {
     }
 
     // Get the lower bound from cache.
-    public double getLowerBound(Branch branch, int depth, int nodes) {
+    public int getLowerBound(Branch branch, int depth, int nodes) {
         HashMap<Branch, List<CacheEntry>> map = cache[branch.getDepth()];
         // No lower bound yet, return 0.
         if (!map.containsKey(branch))
             return 0;
 
         List<CacheEntry> target = map.get(branch);
-        double best = 0;
+        int best = 0;
 
         for (CacheEntry entry : target) {
             if (nodes <= entry.getNodes() && depth <= entry.getDepth()) {
@@ -56,7 +56,7 @@ public class Cache {
     }
 
     // Update the lower bound in the cache.
-    public void updateLowerBound(Branch branch, double lb, int depth, int nodes) {
+    public void updateLowerBound(Branch branch, int lb, int depth, int nodes) {
         HashMap<Branch, List<CacheEntry>> map = cache[branch.getDepth()];
         // Create new cache entry if nothing exists yet.
         if (!map.containsKey(branch)) {

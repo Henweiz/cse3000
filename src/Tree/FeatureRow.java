@@ -7,11 +7,11 @@ public class FeatureRow {
     private List<Integer> values;
     private int id;
 
-    private double[] runtimes;
+    private int[] runtimes;
 
     private int optimalLabel;
 
-    public FeatureRow(List<Integer> values, double[] runtimes, int id, int optimalLabel) {
+    public FeatureRow(List<Integer> values, int[] runtimes, int id, int optimalLabel) {
         this.values = values;
         this.id = id;
         this.runtimes = runtimes;
@@ -26,7 +26,7 @@ public class FeatureRow {
         return id;
     }
 
-    public double[] getRuntimes() {
+    public int[] getRuntimes() {
         return runtimes;
     }
 

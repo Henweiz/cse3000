@@ -8,7 +8,7 @@ public class ASPDataset {
     private List<Algorithm> algorithms;
     private int size;
 
-    private double[] totalRunTime;
+    private int[] totalRunTime;
 
     private List<FeatureRow> dataset;
 
@@ -22,7 +22,7 @@ public class ASPDataset {
         algorithms = new ArrayList<>();
         dataset = new ArrayList<>();
         size = 0;
-        totalRunTime = new double[numberOfAlgs];
+        totalRunTime = new int[numberOfAlgs];
         calculated = false;
     }
 
@@ -101,7 +101,7 @@ public class ASPDataset {
 
     public int getLowestRunTimeLabel() {
         int label = Integer.MAX_VALUE;
-        double min = Double.MAX_VALUE;
+        int min = Integer.MAX_VALUE;
         for (int i = 0; i < totalRunTime.length; i++) {
             if (min > totalRunTime[i]) {
                 min = totalRunTime[i];
@@ -111,7 +111,7 @@ public class ASPDataset {
         return label;
     }
 
-    public double[] getTotalRunTime() {
+    public int[] getTotalRunTime() {
         return totalRunTime;
     }
 

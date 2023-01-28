@@ -1,3 +1,4 @@
+import FeatureExtraction.FeatureExtractor;
 import Tree.*;
 
 import java.io.FileWriter;
@@ -11,51 +12,21 @@ public class Main {
     public static void main(String[] args) {
         long start = System.nanoTime();
         File file = new File("Files/Test/anneal.txt");
+
         // 44 features, 15 solutions, 290 instances.
-        //file = new File("Files/SAT/Solutions/target.txt");
+        //file = new File("Files/SAT/Solutions/SAT250.txt");
+
         // 48 features, 4 solutions, 105 instances.
-        //file = new File("Files/GCP/ASP.txt");
+        file = new File("Files/GCP/Solutions/ASP.txt");
+
         // 37 features, 532 solutions, 1004 instances.
-        file = new File("Files/MIP/target.txt");
-        //File file = new File("Files/Test/balance-scale_categorical_bin.txt");
+        //file = new File("Files/MIP/Solutions/target.txt");
+        ASPDataset dataset = scanASPTxt(file, 4, 48);
+
         //file = new File("Files/Test/test.txt");
+
         /*
-        file = new File("Files/MIP/features.txt");
-
-
-        File algs = new File("Files/MIP/algorithms.txt");
-
-        SATDataset reader = new SATDataset(1004);
-        reader.scanFeatures(file);
-        reader.scanBinarizedFile(new File("Files/MIP/binarized.txt"));
-        reader.generateFeatureFile2(algs, new File("Files/MIP/target.txt"));
-*/
-        ASPDataset dataset = scanASPTxt(file, 532, 37);
-        //labelASPTxt(file, 15, 44, new File("Files/SAT/labelledASP.txt"));
-
-        //file = new File("Files/SAT/gen_mult_3_5_9999.wcnf");
-        //file = new File("Files/SAT/mul_8_9.wcnf");
-        //file = new File("Files/SAT/AES1-76-36.wcnf");
-        //file = new File("Files/SAT/Test.wcnf");
-        //file = new File("Files/SAT/security-witness/RSN_Security_Min_Witness-Direct-p93791-D7.wcnf");
-/*
-        //File folder = new File("Files/SAT/xai");
-        File[] listOfFiles = folder.listFiles();
-
-        assert listOfFiles != null;
-        for (File f : listOfFiles) {
-            FeatureExtractor fe = new FeatureExtractor();
-            try {
-                fe.satReader(f);
-                fe.generateFeatures();
-                fe.writeFeaturesToFile(f);
-            } catch (OutOfMemoryError ignored) {
-
-            }
-        }
-
-/*
-        // Generate SAT dataset
+   // Generate SAT dataset
         FeatureExtractor featureExtractor = new FeatureExtractor();
 
 
@@ -76,6 +47,7 @@ public class Main {
         sat.scanFeatures(file);
         sat.writeOnlyFeatures(new File("Files/SAT/onlyfeaturesSAT.txt"));
         sat.convertToFloat(new File("Files/SAT/onlyfeaturesSAT.txt"));
+*/
 
         // Generate GCP dataset
 /*
@@ -86,57 +58,36 @@ public class Main {
         gcp.generateFeatureFile(fileToWrite);
 
 */
-        /*
-        File a = new File("Files/GCP/data2.txt");
-        File f = new File("Files/GCP/binarized.txt");
-        File target = new File("Files/GCP/ASP.txt");
-        FileMerger merger = new FileMerger();
-        merger.merge(f, a, target);
-         */
-/*
-        file = new File("Files/SAT/DatasetSAT.txt");
-        File algs = new File("Files/SAT/algorithms_reduced.txt");
-        File target = new File("Files/SAT/target.txt");
-        SATDataset sat = new SATDataset(365);
-        sat.scanFeatures(file);
-        sat.scanBinarizedFile(new File("Files/SAT/binarized.txt"));
-        sat.generateFeatureFile(algs, target);
-*/
 
-        int depth = 5;
-        int nodes = 31;
+        int depth = 2;
+        int nodes = 3;
         Branch rootBranch = new Branch();
+        /*
         int sum = 0;
         for (Algorithm a : dataset.getAlgorithms()) {
             sum += a.getTotalRunTime();
         }
         System.out.println(sum);
+         */
 
         Solver solver = new Solver(dataset, 10000, depth);
         BinaryTree.Node best = solver.solveSubtree(dataset, rootBranch, depth, nodes, Integer.MAX_VALUE);
 
-        //BinaryTree tree = computeThreeNodes(dataset);
         System.out.println("Misclassification score based on runtime (* 100): " + best.getMc());
-        //System.out.println("Label: " + best.getLabel());
         System.out.println("number of nodes in tree " + best.getTotalNodes());
         System.out.println("cache entries: " + solver.cache.getNumEntries());
-        //System.out.println(rootBranch.getNodes());
-        best = solver.cache.getOptimalNode(rootBranch, depth, nodes);
-        System.out.println(best.getMc());
-        System.out.println(best.getFeature());
 
 
         long end = System.nanoTime();
         long duration = (end - start) / 1000000;
         System.out.println("execution took: " + duration + " ms");
 
-        BinaryTree.Node tree = solver.constructTree(dataset, rootBranch, depth, nodes);
+        /*
         // TODO fix printing, cuz its wacky atm
+        BinaryTree.Node tree = solver.constructTree(dataset, rootBranch, depth, nodes);
         tree.print2D();
         System.out.println("Total misclassifications: " + tree.computeMisclassification(dataset));
-
-
-
+*/
     }
 
 
@@ -195,7 +146,7 @@ public class Main {
 
     // Scan ASP dataset file (has algorithm runtimes instead of labels).
     public static ASPDataset scanASPTxt(File file, int numOfSolutions, int numOfFeatures) {
-        int skip = 482;
+        int skip = 0;
         numOfSolutions = numOfSolutions - skip;
         ASPDataset dataset = new ASPDataset(numOfSolutions);
 

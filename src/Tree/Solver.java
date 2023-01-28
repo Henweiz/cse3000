@@ -417,11 +417,6 @@ public class Solver {
 
     private int calcClassificationScoreNegPos(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
-        int sum = 0;
-
-        for (Algorithm a : dataset.getAlgorithms()) {
-            sum += (a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j]);
-        }
 
         for (Algorithm a : dataset.getAlgorithms()) {
             min = Math.min(((a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j])), min);
@@ -433,11 +428,6 @@ public class Solver {
 
     private int calcClassificationScorePosNeg(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
-        int sum = 0;
-
-        for (Algorithm a : dataset.getAlgorithms()) {
-            sum += (a.getFreqCounter()[i] - a.getFreqCounterPair()[i][j]);
-        }
 
         for (Algorithm a : dataset.getAlgorithms()) {
             min = Math.min(((a.getFreqCounter()[i] - a.getFreqCounterPair()[i][j])), min);
@@ -448,11 +438,6 @@ public class Solver {
 
     private int calcClassificationScoreNegNeg(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
-        int sum = 0;
-
-        for (Algorithm a : dataset.getAlgorithms()) {
-            sum += a.getTotalRunTime() - (a.getFreqCounter()[i] + a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j]);
-        }
 
         for (Algorithm a : dataset.getAlgorithms()) {
             int score = (a.getTotalRunTime() - (a.getFreqCounter()[i] + a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j]));
@@ -466,11 +451,6 @@ public class Solver {
 
     private int calcClassificationScorePosPos(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
-        int sum = 0;
-
-        for (Algorithm a : dataset.getAlgorithms()) {
-            sum += a.getFreqCounterPair()[i][j];
-        }
 
         for (Algorithm a : dataset.getAlgorithms()) {
             int score = a.getFreqCounterPair()[i][j];

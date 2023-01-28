@@ -4,12 +4,12 @@ import java.util.List;
 
 public class FeatureRow {
 
-    private List<Integer> values;
-    private int id;
+    private final List<Integer> values;
+    private final int id;
 
-    private int[] runtimes;
+    private final int[] runtimes;
 
-    private int optimalLabel;
+    private final int optimalLabel;
 
     public FeatureRow(List<Integer> values, int[] runtimes, int id, int optimalLabel) {
         this.values = values;

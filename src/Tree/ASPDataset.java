@@ -98,8 +98,9 @@ public class ASPDataset {
     public int getLowestRunTimeLabel() {
         int label = Integer.MAX_VALUE;
         int min = Integer.MAX_VALUE;
+        //int total = getSumRunTimes();
         for (int i = 0; i < totalRunTime.length; i++) {
-            System.out.println("label: " + i + " Runtime: " + totalRunTime[i]);
+            //System.out.println("label: " + i + " Runtime: " + totalRunTime[i]);
             if (min > totalRunTime[i]) {
                 min = totalRunTime[i];
                 label = i;
@@ -110,6 +111,14 @@ public class ASPDataset {
 
     public int[] getTotalRunTime() {
         return totalRunTime;
+    }
+
+    public int getSumRunTimes() {
+        int sum = 0;
+        for (int t : totalRunTime) {
+            sum += t;
+        }
+        return sum;
     }
 
     public List<Algorithm> getAlgorithms() {

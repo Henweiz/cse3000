@@ -85,8 +85,8 @@ public class Solver {
             if (nodes == 3 && isNodeBetter(tree[2], best)) {
                 best = tree[2];
             }
-            System.out.println(tree[0].getTotalNodes() + " " +tree[0].getMc());
-            System.out.println(best.getTotalNodes() + " " + best.getMc());
+            //System.out.println(tree[0].getTotalNodes() + " " +tree[0].getMc());
+            //System.out.println(best.getTotalNodes() + " " + best.getMc());
 
             calculator.updateArchive(dataset, branch, depth);
 
@@ -341,11 +341,7 @@ public class Solver {
             featureNode.setRightNode(rightChild);
 
             return featureNode;
-        } else {
-            if( nodes != 1 && nodes != 2) {
-                System.out.println(nodes);
-                System.out.println("shouldn't happen");
-            }
+        } else if (depth <= 2){
             BinaryTree.Node[] results = computeThreeNodes(dataset);
 
             if ((nodes == 1 && results[0].mc == getLeafMisclassification(dataset))
@@ -392,7 +388,30 @@ public class Solver {
                 return featureNode;
             }
 
+        } else {
+            BinaryTree.Node[] results = computeThreeNodes(dataset);
+            if (results[0].getMc() == getLeafMisclassification(dataset)) {
+                return createLeafNode(dataset);
+            }
+            BinaryTree.Node featureNode = BinaryTree.Node.createInfeasibleNode();
 
+            featureNode.setFeature(results[0].feature);
+            featureNode.setMc(results[0].mc);
+            ASPDataset dataWith = dataset.getDatasetWithFeature(results[0].feature);
+            ASPDataset dataWithout = dataset.getDatasetWithoutFeature(results[0].feature);
+
+            Branch left = Branch.left.leftChildBranch(branch, results[0].feature);
+            Branch right = Branch.right.rightChildBranch(branch, results[0].feature);
+
+            int leftDepth = Math.min(depth-1, results[0].left);
+            int rightDepth = Math.min(depth-1, results[0].right);
+            BinaryTree.Node leftChild = constructTree(dataWithout, left, leftDepth, results[0].left);
+            BinaryTree.Node rightChild = constructTree(dataWith, right, rightDepth, results[0].right);
+
+            featureNode.setLeftNode(leftChild);
+            featureNode.setRightNode(rightChild);
+
+            return featureNode;
         }
     }
 
@@ -405,7 +424,7 @@ public class Solver {
         }
 
         for (Algorithm a : dataset.getAlgorithms()) {
-            min = Math.min((sum - (a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j])), min);
+            min = Math.min(((a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j])), min);
         }
 
 
@@ -421,7 +440,7 @@ public class Solver {
         }
 
         for (Algorithm a : dataset.getAlgorithms()) {
-            min = Math.min((sum - (a.getFreqCounter()[i] - a.getFreqCounterPair()[i][j])), min);
+            min = Math.min(((a.getFreqCounter()[i] - a.getFreqCounterPair()[i][j])), min);
         }
 
         return min;
@@ -437,7 +456,7 @@ public class Solver {
 
         for (Algorithm a : dataset.getAlgorithms()) {
             int score = (a.getTotalRunTime() - (a.getFreqCounter()[i] + a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j]));
-            min = Math.min(sum - score, min);
+            min = Math.min(score, min);
         }
 
 
@@ -455,7 +474,7 @@ public class Solver {
 
         for (Algorithm a : dataset.getAlgorithms()) {
             int score = a.getFreqCounterPair()[i][j];
-            min = Math.min(sum - score, min);
+            min = Math.min(score, min);
         }
 
 
@@ -495,29 +514,25 @@ public class Solver {
         }
     }
 
-    private int calcMisclassification(ASPDataset dataset) {
-        int min = Integer.MAX_VALUE;
-        for (int f : dataset.getTotalRunTime()) {
-            if (min > f) {
-                min = f;
-            }
-        }
+    private int calcMisclassification(ASPDataset dataset, int label) {
+        //int total = dataset.getSumRunTimes();
 
-        return min;
+        return dataset.getTotalRunTime()[label];
     }
 
     // Create optimal leaf node of the dataset.
     private BinaryTree.Node createLeafNode(ASPDataset dataset) {
         int feature = Integer.MAX_VALUE;
         int label = getBestLabel(dataset);
-        int ms = calcMisclassification(dataset);
+        int ms = calcMisclassification(dataset, label);
 
         return new BinaryTree.Node(feature, label, ms);
     }
 
     // Return optimal leaf misclassification.
     private int getLeafMisclassification(ASPDataset dataset) {
-        return calcMisclassification(dataset);
+        int label = getBestLabel(dataset);
+        return calcMisclassification(dataset, label);
     }
 
     // Return labelinstances with the least misclassifications.

@@ -120,6 +120,7 @@ public class Main {
         //System.out.println("Label: " + best.getLabel());
         System.out.println("number of nodes in tree " + best.getTotalNodes());
         System.out.println("cache entries: " + solver.cache.getNumEntries());
+        //System.out.println(rootBranch.getNodes());
 
 
         long end = System.nanoTime();

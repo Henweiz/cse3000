@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 public class Branch {
 
     private List<Integer> nodes;
-    private float ms;
+    private int ms;
+
+    private int depth;
 
     public static Branch left = new Branch();
 
@@ -18,11 +20,13 @@ public class Branch {
     public Branch(){
         this.nodes = new ArrayList<>();
         this.ms = 0;
+        this.depth = 0;
     }
 
     public Branch(Branch branch) {
         this.nodes = branch.nodes;
         this.ms = branch.ms;
+        this.depth = branch.getDepth();
     }
 
     public void addNode(int f) {
@@ -38,10 +42,10 @@ public class Branch {
     }
 
     public int getDepth() {
-        return nodes.size();
+        return depth;
     }
 
-    public float getMs() {
+    public int getMs() {
         return ms;
     }
 
@@ -49,13 +53,18 @@ public class Branch {
         return nodes.size();
     }
 
+    public List<Integer> getNodes() {
+        return nodes;
+    }
+
     public void addFeatureBranch(int f, int present) {
         int c = getCode(f, present);
         nodes.add(c);
+        depth++;
         nodes = nodes.stream().distinct().collect(Collectors.toList());
 
         // No need to sort(?).
-        Collections.sort(nodes);
+        //Collections.sort(nodes);
     }
 
     public Branch leftChildBranch(Branch branch, int feature) {
@@ -85,11 +94,18 @@ public class Branch {
     public int hashCode() {
         int k = getDepth();
         for (int i = 0; i < getDepth(); i++) {
-            k ^= (nodes.get(i) + 0x9e3779b9 + (64*k) + (k/4));
+            k ^= (31 * k) + (nodes.get(i)==null ? 0 : nodes.get(i));
         }
         return k;
     }
-*/
+
+ */
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nodes, depth);
+    }
+
     public int getCode(int f, int present) {
         return (2 * f) + present;
     }

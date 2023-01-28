@@ -85,6 +85,8 @@ public class Solver {
             if (nodes == 3 && isNodeBetter(tree[2], best)) {
                 best = tree[2];
             }
+            System.out.println(tree[0].getTotalNodes() + " " +tree[0].getMc());
+            System.out.println(best.getTotalNodes() + " " + best.getMc());
 
             calculator.updateArchive(dataset, branch, depth);
 
@@ -166,7 +168,6 @@ public class Solver {
 
     // Solve subtree with a feature split (root node).
     private Pair<BinaryTree.Node, Integer> solveSubtreeWithRoot(ASPDataset dataset, Branch branch, int rootFeature, int depth, int nodesLeft, int nodesRight, int upperBound, BinaryTree.Node node) {
-
         // Split into left and right node.
         int dl = Math.min(depth - 1, nodesLeft);
         int dr = Math.min(depth - 1, nodesRight);
@@ -183,7 +184,7 @@ public class Solver {
         // If left split is more likely to be feasible, do it first.
         if (getLeafMisclassification(noFeature) >= getLeafMisclassification(withFeature)) {
             ubl = upperBound - cache.getLowerBound(right, dr, nodesRight);
-            //System.out.println(noFeature.getDataSize() + " " + "without feature dataset | depth: " + dl + " | nodes: " + nodesLeft + " | branch: " + left);
+            //System.out.println(noFeature.getSize() + " " + "without feature dataset | depth: " + dl + " | nodes: " + nodesLeft + " | branch: " + left);
             BinaryTree.Node tl = solveSubtree(noFeature, left, dl, nodesLeft, ubl);
 
             // No need to calculate right side if no feasible node is found on left.
@@ -193,7 +194,7 @@ public class Solver {
                 return new Pair<>(BinaryTree.Node.createInfeasibleNode(), localbound);
             }
             ubr = upperBound - tl.getMc();
-            //System.out.println(withFeature.getDataSize() + " " + "with feature dataset | depth: " + dr + " | nodes: " + nodesRight + " | branch: " + right);
+            //System.out.println(withFeature.getSize() + " " + "with feature dataset | depth: " + dr + " | nodes: " + nodesRight + " | branch: " + right);
             BinaryTree.Node tr = solveSubtree(withFeature, right, dr, nodesRight, ubr);
 
             // Found new optimal node.
@@ -211,7 +212,7 @@ public class Solver {
 
         else {
             ubr = upperBound - cache.getLowerBound(left, dl, nodesLeft);
-            //System.out.println(withFeature.getDataSize() + " " + "with feature dataset | depth: " + dr + " | nodes: " + nodesRight + " | branch: " + right);
+            //System.out.println(withFeature.getSize() + " " + "with feature dataset | depth: " + dr + " | nodes: " + nodesRight + " | branch: " + right);
             BinaryTree.Node tr = solveSubtree(withFeature, right, dr, nodesRight, ubr);
 
             if (!tr.isFeasible()) {
@@ -219,7 +220,7 @@ public class Solver {
                 return new Pair<>(BinaryTree.Node.createInfeasibleNode(), localbound);
             }
             ubl = upperBound - tr.getMc();
-            //System.out.println(noFeature.getDataSize() + " " + "without feature dataset | depth: " + dl + " | nodes: " + nodesLeft + " | branch: " + left);
+            //System.out.println(noFeature.getSize() + " " + "without feature dataset | depth: " + dl + " | nodes: " + nodesLeft + " | branch: " + left);
             BinaryTree.Node tl = solveSubtree(noFeature, left, dl, nodesLeft, ubl);
 
             if (tl.isFeasible()) {
@@ -238,7 +239,7 @@ public class Solver {
     private BinaryTree.Node[] computeThreeNodes(ASPDataset dataset){
 
         // Initialize and calculate frequency counters for the dataset.
-        int featureSize = dataset.getDataset().get(0).getFeatureSize();
+        int featureSize = features;
         dataset.calcFreqCounters();
         BinaryTree.Node root2 = BinaryTree.Node.createInfeasibleNode();
         BinaryTree.Node root1 = BinaryTree.Node.createInfeasibleNode();
@@ -255,6 +256,7 @@ public class Solver {
         Arrays.fill(bestRightSubtreeMC, Integer.MAX_VALUE);
 
         for (int fi = 0; fi < featureSize; fi++) {
+
             int mcLeft = calcClassificationScoreNegNeg(dataset, fi, fi);
             int mcRight = calcClassificationScorePosPos(dataset, fi, fi);
             int mcOneNode = mcLeft + mcRight;
@@ -276,7 +278,7 @@ public class Solver {
                 //System.out.println(csNegPos);
                 //System.out.println(csNegNeg);
                 //System.out.println(csPosNeg);
-               // System.out.println(csPosPos);
+                //System.out.println(csPosPos);
 
                 int misCSl = csNegNeg + csNegPos;
                 int misCSr = csPosPos + csPosNeg;
@@ -343,7 +345,6 @@ public class Solver {
             if( nodes != 1 && nodes != 2) {
                 System.out.println(nodes);
                 System.out.println("shouldn't happen");
-                return null;
             }
             BinaryTree.Node[] results = computeThreeNodes(dataset);
 
@@ -397,9 +398,14 @@ public class Solver {
 
     private int calcClassificationScoreNegPos(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
+        int sum = 0;
 
         for (Algorithm a : dataset.getAlgorithms()) {
-            min = Math.min((a.getTotalRunTime() - (a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j])), min);
+            sum += (a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j]);
+        }
+
+        for (Algorithm a : dataset.getAlgorithms()) {
+            min = Math.min((sum - (a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j])), min);
         }
 
 
@@ -408,9 +414,14 @@ public class Solver {
 
     private int calcClassificationScorePosNeg(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
+        int sum = 0;
 
         for (Algorithm a : dataset.getAlgorithms()) {
-            min = Math.min((a.getTotalRunTime() - (a.getFreqCounter()[i] - a.getFreqCounterPair()[i][j])), min);
+            sum += (a.getFreqCounter()[i] - a.getFreqCounterPair()[i][j]);
+        }
+
+        for (Algorithm a : dataset.getAlgorithms()) {
+            min = Math.min((sum - (a.getFreqCounter()[i] - a.getFreqCounterPair()[i][j])), min);
         }
 
         return min;
@@ -418,11 +429,17 @@ public class Solver {
 
     private int calcClassificationScoreNegNeg(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
+        int sum = 0;
 
         for (Algorithm a : dataset.getAlgorithms()) {
-            int score = a.getTotalRunTime() - a.getFreqCounter()[i] - a.getFreqCounter()[j] + a.getFreqCounterPair()[i][j];
-            min = Math.min(score, min);
+            sum += a.getTotalRunTime() - (a.getFreqCounter()[i] + a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j]);
         }
+
+        for (Algorithm a : dataset.getAlgorithms()) {
+            int score = (a.getTotalRunTime() - (a.getFreqCounter()[i] + a.getFreqCounter()[j] - a.getFreqCounterPair()[i][j]));
+            min = Math.min(sum - score, min);
+        }
+
 
 
         return min;
@@ -430,10 +447,15 @@ public class Solver {
 
     private int calcClassificationScorePosPos(ASPDataset dataset, int i, int j) {
         int min = Integer.MAX_VALUE;
+        int sum = 0;
+
+        for (Algorithm a : dataset.getAlgorithms()) {
+            sum += a.getFreqCounterPair()[i][j];
+        }
 
         for (Algorithm a : dataset.getAlgorithms()) {
             int score = a.getFreqCounterPair()[i][j];
-            min = Math.min(score, min);
+            min = Math.min(sum - score, min);
         }
 
 
@@ -444,6 +466,7 @@ public class Solver {
     private void updateRootNode(BinaryTree.Node node, int f, int[] left, int[] right) {
         int total = left[f] + right[f];
         if (node.mc > total) {
+            //System.out.println("root: " +total + " feature: " + f);
             node.setMc(total);
             node.setFeature(f);
             node.assignLeftNode(1);
@@ -455,6 +478,7 @@ public class Solver {
     private void updateTwoNodes(BinaryTree.Node node, int f, int mcLeft, int mcRight, int[] left, int[] right) {
         int total = left[f] + mcRight;
         if (node.mc > total) {
+            //System.out.println("2 nodes left: " +total + " feature: " + f);
             node.setMc(total);
             node.setFeature(f);
             node.assignLeftNode(1);
@@ -463,6 +487,7 @@ public class Solver {
 
         total = right[f] + mcLeft;
         if (node.mc > total) {
+            //System.out.println("2 nodes right: " +total + " feature: " + f);
             node.setMc(total);
             node.setFeature(f);
             node.assignLeftNode(0);

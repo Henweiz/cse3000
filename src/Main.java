@@ -16,10 +16,12 @@ public class Main {
         // 48 features, 4 solutions, 105 instances.
         //file = new File("Files/GCP/ASP.txt");
         // 37 features, 532 solutions, 1004 instances.
-        file = new File("Files/MIP/target.txt");
+        //file = new File("Files/MIP/target.txt");
         //File file = new File("Files/Test/balance-scale_categorical_bin.txt");
+        //file = new File("Files/Test/test.txt");
         /*
         file = new File("Files/MIP/features.txt");
+
 
         File algs = new File("Files/MIP/algorithms.txt");
 
@@ -28,7 +30,7 @@ public class Main {
         reader.scanBinarizedFile(new File("Files/MIP/binarized.txt"));
         reader.generateFeatureFile2(algs, new File("Files/MIP/target.txt"));
 */
-        ASPDataset dataset = scanASPTxt(file, 532, 37);
+        ASPDataset dataset = scanASPTxt(file, 15, 44);
         //labelASPTxt(file, 15, 44, new File("Files/SAT/labelledASP.txt"));
 
         //file = new File("Files/SAT/gen_mult_3_5_9999.wcnf");
@@ -101,15 +103,21 @@ public class Main {
         sat.generateFeatureFile(algs, target);
 */
 
-        int depth = 4;
-        int nodes = 15;
+        int depth = 2;
+        int nodes = 3;
         Branch rootBranch = new Branch();
+        int sum = 0;
+        for (Algorithm a : dataset.getAlgorithms()) {
+            sum += a.getTotalRunTime();
+        }
+        System.out.println(sum);
 
         Solver solver = new Solver(dataset, 10000, depth);
         BinaryTree.Node best = solver.solveSubtree(dataset, rootBranch, depth, nodes, Integer.MAX_VALUE);
 
         //BinaryTree tree = computeThreeNodes(dataset);
-        System.out.println("Misclassification score: " + ((double) best.getMc()/100));
+        System.out.println("Misclassification score: " + best.getMc());
+        //System.out.println("Label: " + best.getLabel());
         System.out.println("number of nodes in tree " + best.getTotalNodes());
         System.out.println("cache entries: " + solver.cache.getNumEntries());
 

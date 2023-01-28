@@ -12,9 +12,6 @@ public class ASPDataset {
 
     private List<FeatureRow> dataset;
 
-
-    private boolean calculated;
-
     private int featureSize;
 
 
@@ -23,7 +20,6 @@ public class ASPDataset {
         dataset = new ArrayList<>();
         size = 0;
         totalRunTime = new int[numberOfAlgs];
-        calculated = false;
     }
 
     public void addAlgorithm(Algorithm a) {
@@ -103,6 +99,7 @@ public class ASPDataset {
         int label = Integer.MAX_VALUE;
         int min = Integer.MAX_VALUE;
         for (int i = 0; i < totalRunTime.length; i++) {
+            System.out.println("label: " + i + " Runtime: " + totalRunTime[i]);
             if (min > totalRunTime[i]) {
                 min = totalRunTime[i];
                 label = i;

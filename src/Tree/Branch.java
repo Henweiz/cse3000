@@ -55,7 +55,7 @@ public class Branch {
         nodes = nodes.stream().distinct().collect(Collectors.toList());
 
         // No need to sort(?).
-        //Collections.sort(nodes);
+        Collections.sort(nodes);
     }
 
     public Branch leftChildBranch(Branch branch, int feature) {

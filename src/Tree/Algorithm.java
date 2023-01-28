@@ -25,7 +25,7 @@ public class Algorithm {
         this.totalRunTime = totalruntime;
     }
 
-    public void addRunTime(double f) {
+    public void addRunTime(int f) {
         this.totalRunTime += f;
     }
 

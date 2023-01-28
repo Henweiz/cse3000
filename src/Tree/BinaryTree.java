@@ -46,7 +46,7 @@ public class BinaryTree {
         }
 
         public int getTotalNodes() {
-            if (feature == Integer.MAX_VALUE) {
+            if (isLabelNode()) {
                 return 0;
             }
             return 1 + left + right;

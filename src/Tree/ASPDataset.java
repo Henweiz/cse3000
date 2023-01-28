@@ -63,6 +63,15 @@ public class ASPDataset {
         return dataset.get(i);
     }
 
+    public Algorithm getSpecificAlgorithm(int label) {
+        for (Algorithm a : algorithms) {
+            if (a.getLabel() == label) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     public ASPDataset getDatasetWithFeature(int f) {
         ASPDataset data = new ASPDataset(totalRunTime.length);
         for (Algorithm a : algorithms) {

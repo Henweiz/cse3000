@@ -100,12 +100,12 @@ public class Branch {
     }
 
  */
-
+/*
     @Override
     public int hashCode() {
         return Objects.hash(nodes, depth);
     }
-
+*/
     public int getCode(int f, int present) {
         return (2 * f) + present;
     }

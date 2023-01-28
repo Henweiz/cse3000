@@ -37,7 +37,9 @@ public class LowerBoundCalculator {
     public Pair<Boolean, Integer> computeLowerBound(ASPDataset dataset, Branch branch, int depth, int nodes, Cache cache) {
         boolean check = false;
         int lowerbound = 0;
-
+        // Disable similarity bounding
+        return new Pair<>(false, 0);
+/*
         for (ArchiveEntry entry : archive[depth].entries) {
             int lb = cache.getLowerBound(entry.branch, depth, nodes);
             if (entry.data.getSize() > dataset.getSize() && entry.data.getSize() - dataset.getSize() >= lb) {
@@ -56,7 +58,7 @@ public class LowerBoundCalculator {
         }
 
         return new Pair<>(check, lowerbound);
-
+*/
     }
 
     public static Pair<Integer, Integer> computeDifference(ASPDataset newData, ASPDataset oldData) {

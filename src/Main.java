@@ -12,11 +12,11 @@ public class Main {
         long start = System.nanoTime();
         File file = new File("Files/Test/anneal.txt");
         // 44 features, 15 solutions, 290 instances.
-        file = new File("Files/SAT/Solutions/target.txt");
+        //file = new File("Files/SAT/Solutions/target.txt");
         // 48 features, 4 solutions, 105 instances.
         //file = new File("Files/GCP/ASP.txt");
         // 37 features, 532 solutions, 1004 instances.
-        //file = new File("Files/MIP/target.txt");
+        file = new File("Files/MIP/target.txt");
         //File file = new File("Files/Test/balance-scale_categorical_bin.txt");
         //file = new File("Files/Test/test.txt");
         /*
@@ -30,7 +30,7 @@ public class Main {
         reader.scanBinarizedFile(new File("Files/MIP/binarized.txt"));
         reader.generateFeatureFile2(algs, new File("Files/MIP/target.txt"));
 */
-        ASPDataset dataset = scanASPTxt(file, 15, 44);
+        ASPDataset dataset = scanASPTxt(file, 532, 37);
         //labelASPTxt(file, 15, 44, new File("Files/SAT/labelledASP.txt"));
 
         //file = new File("Files/SAT/gen_mult_3_5_9999.wcnf");
@@ -103,8 +103,8 @@ public class Main {
         sat.generateFeatureFile(algs, target);
 */
 
-        int depth = 2;
-        int nodes = 3;
+        int depth = 5;
+        int nodes = 31;
         Branch rootBranch = new Branch();
         int sum = 0;
         for (Algorithm a : dataset.getAlgorithms()) {
@@ -116,11 +116,14 @@ public class Main {
         BinaryTree.Node best = solver.solveSubtree(dataset, rootBranch, depth, nodes, Integer.MAX_VALUE);
 
         //BinaryTree tree = computeThreeNodes(dataset);
-        System.out.println("Misclassification score: " + best.getMc());
+        System.out.println("Misclassification score based on runtime (* 100): " + best.getMc());
         //System.out.println("Label: " + best.getLabel());
         System.out.println("number of nodes in tree " + best.getTotalNodes());
         System.out.println("cache entries: " + solver.cache.getNumEntries());
         //System.out.println(rootBranch.getNodes());
+        best = solver.cache.getOptimalNode(rootBranch, depth, nodes);
+        System.out.println(best.getMc());
+        System.out.println(best.getFeature());
 
 
         long end = System.nanoTime();
@@ -128,6 +131,7 @@ public class Main {
         System.out.println("execution took: " + duration + " ms");
 
         BinaryTree.Node tree = solver.constructTree(dataset, rootBranch, depth, nodes);
+        // TODO fix printing, cuz its wacky atm
         tree.print2D();
         System.out.println("Total misclassifications: " + tree.computeMisclassification(dataset));
 
@@ -191,7 +195,7 @@ public class Main {
 
     // Scan ASP dataset file (has algorithm runtimes instead of labels).
     public static ASPDataset scanASPTxt(File file, int numOfSolutions, int numOfFeatures) {
-        int skip = 0;
+        int skip = 482;
         numOfSolutions = numOfSolutions - skip;
         ASPDataset dataset = new ASPDataset(numOfSolutions);
 

@@ -106,9 +106,9 @@ public class Solver {
     private BinaryTree.Node generalCase(ASPDataset dataset, Branch branch, int depth, int nodes, int upperBound) {
 
         // Initial solution with single node.
-        BinaryTree.Node t = createLeafNode(dataset);
-        if (t.getMc() > upperBound)
-            t = BinaryTree.Node.createInfeasibleNode();
+        BinaryTree.Node t = BinaryTree.Node.createInfeasibleNode();
+        if (getLeafMisclassification(dataset) <= upperBound)
+            t = createLeafNode(dataset);
 
         // Retrieve lowerbound from cache
         int rlb = Integer.MAX_VALUE;
@@ -129,7 +129,7 @@ public class Solver {
             }
             for (int n = minNodes; n <= maxNodes; n++) {
                 int m = nodes-n-1;
-                int ub = Math.min(upperBound, (t.isFeasible() ? t.getMc() - 1 : Integer.MAX_VALUE));
+                int ub = Math.min(upperBound, (t.isFeasible() ? (t.getMc() - 1) : Integer.MAX_VALUE));
                 Pair<BinaryTree.Node, Integer> local = solveSubtreeWithRoot(dataset, branch, f, depth, n, m, ub, t);
 
                 // If no feasible node is found, update the refined lower bound.

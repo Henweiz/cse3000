@@ -127,8 +127,10 @@ public class BinaryTree {
             if (node == null)
                 return;
             // Base case
-            if (node.feature == Integer.MAX_VALUE && node.label == Integer.MAX_VALUE)
+            if (node.feature == Integer.MAX_VALUE && node.label == Integer.MAX_VALUE) {
+                System.out.println("INFEASIBLE NODE");
                 return;
+            }
 
             // Increase distance between levels
             space++;
@@ -144,7 +146,7 @@ public class BinaryTree {
             if (node.isLabelNode()) {
                 System.out.println("(Label: " + node.label + " )\n");
             } else {
-                System.out.print(node.feature + "\n");
+                System.out.print("(Depth: " + space + ") " +node.feature + "\n");
             }
 
             // Process left child
@@ -180,6 +182,8 @@ public class BinaryTree {
 
     }
 
+
+    // This class is not used anymore.
     public Node root;
 
     private int ms;

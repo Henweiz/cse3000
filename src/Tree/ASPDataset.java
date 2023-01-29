@@ -5,13 +5,19 @@ import java.util.List;
 
 public class ASPDataset {
 
+    // List of solution algorithms (labels).
     private List<Algorithm> algorithms;
+
+    // Total size of the dataset.
     private int size;
 
+    // Total runtime of each solution algorithm.
     private int[] totalRunTime;
 
+    // List of feature instances.
     private List<FeatureRow> dataset;
 
+    // Size of the feature set.
     private int featureSize;
 
 
@@ -72,6 +78,7 @@ public class ASPDataset {
         return null;
     }
 
+    // Return dataset with only positive occurrences of feature f.
     public ASPDataset getDatasetWithFeature(int f) {
         ASPDataset data = new ASPDataset(totalRunTime.length);
         for (Algorithm a : algorithms) {
@@ -88,6 +95,7 @@ public class ASPDataset {
         return data;
     }
 
+    // Return dataset with only negative occurrences of feature f.
     public ASPDataset getDatasetWithoutFeature(int f) {
         ASPDataset data = new ASPDataset(totalRunTime.length);
         for (Algorithm a : algorithms) {
@@ -104,6 +112,7 @@ public class ASPDataset {
         return data;
     }
 
+    // Get the label of the algorithm with the lowest total run time.
     public int getLowestRunTimeLabel() {
         int label = Integer.MAX_VALUE;
         int min = Integer.MAX_VALUE;
@@ -122,6 +131,7 @@ public class ASPDataset {
         return totalRunTime;
     }
 
+    // Return sum of all run times.
     public int getSumRunTimes() {
         int sum = 0;
         for (int t : totalRunTime) {

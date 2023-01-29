@@ -65,6 +65,8 @@ public class Solver {
         // Do the specialized depth 2 algorithm.
         if (depth <= 2) {
             BinaryTree.Node[] tree = computeThreeNodes(dataset);
+
+            // Cache the results if they are optimal.
             if (!cache.isOptimalCached(branch, 1, 1)) {
                 BinaryTree.Node root = tree[0];
                 cache.storeOptimalBranch(branch, root, 1, 1);
@@ -85,8 +87,6 @@ public class Solver {
             if (nodes == 3 && isNodeBetter(tree[2], best)) {
                 best = tree[2];
             }
-            //System.out.println(tree[0].getTotalNodes() + " " +tree[0].getMc());
-            //System.out.println(best.getTotalNodes() + " " + best.getMc());
 
             calculator.updateArchive(dataset, branch, depth);
 
@@ -275,16 +275,8 @@ public class Solver {
                 int csPosNeg = calcClassificationScorePosNeg(dataset, fi, fj);
                 int csPosPos = calcClassificationScorePosPos(dataset, fi, fj);
 
-                //System.out.println(csNegPos);
-                //System.out.println(csNegNeg);
-                //System.out.println(csPosNeg);
-                //System.out.println(csPosPos);
-
                 int misCSl = csNegNeg + csNegPos;
                 int misCSr = csPosPos + csPosNeg;
-
-                //System.out.println(misCSl);
-                //System.out.println(misCSr);
 
                 if (bestLeftSubtreeMC[fi] > misCSl) {
                     bestLeftSubtreeMC[fi] = misCSl;
@@ -465,7 +457,6 @@ public class Solver {
     private void updateRootNode(BinaryTree.Node node, int f, int[] left, int[] right) {
         int total = left[f] + right[f];
         if (node.mc > total) {
-            //System.out.println("root: " +total + " feature: " + f);
             node.setMc(total);
             node.setFeature(f);
             node.assignLeftNode(1);
@@ -477,7 +468,6 @@ public class Solver {
     private void updateTwoNodes(BinaryTree.Node node, int f, int mcLeft, int mcRight, int[] left, int[] right) {
         int total = left[f] + mcRight;
         if (node.mc > total) {
-            //System.out.println("2 nodes left: " +total + " feature: " + f);
             node.setMc(total);
             node.setFeature(f);
             node.assignLeftNode(1);
@@ -486,7 +476,6 @@ public class Solver {
 
         total = right[f] + mcLeft;
         if (node.mc > total) {
-            //System.out.println("2 nodes right: " +total + " feature: " + f);
             node.setMc(total);
             node.setFeature(f);
             node.assignLeftNode(0);
@@ -495,8 +484,6 @@ public class Solver {
     }
 
     private int calcMisclassification(ASPDataset dataset, int label) {
-        //int total = dataset.getSumRunTimes();
-
         return dataset.getTotalRunTime()[label];
     }
 

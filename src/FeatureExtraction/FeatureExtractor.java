@@ -201,8 +201,8 @@ public class FeatureExtractor {
         int[] varCounts = new int[maxVEdge + 1];
         int[] clauseCounts = new int[maxCEdge + 1];
         double meanVarEdge = (double) totalVarEdges/totalVar;
-        //System.out.println(totalVar);
         double meanClauseEdge = (double) totalClauseEdges/totalClause;
+
         for (int i = 1; i <= totalVar; i++) {
             if (vcg.hasVertex(i)) {
                 sdVar += Math.pow((map.get(i).size() - meanVarEdge), 2);
@@ -212,6 +212,7 @@ public class FeatureExtractor {
                 sdVar += Math.pow(meanVarEdge, 2);
             }
         }
+
         for (int i = totalVar+1; i <= totalVar+totalClause; i++) {
             if (vcg.hasVertex(i)) {
                 sdClause += Math.pow((map.get(i).size() - meanClauseEdge), 2);
@@ -378,6 +379,8 @@ public class FeatureExtractor {
         int minEdge = Integer.MAX_VALUE;
         int maxEdge = 0;
         int totalEdges = 0;
+
+        // Calculate the min, max and average number of edges.
         for (int v : map.keySet()) {
             int nEdge = map.get(v).size();
             totalEdges += nEdge;
@@ -390,6 +393,8 @@ public class FeatureExtractor {
         }
         double meanEdge = (double) totalEdges/total;
         double sd = 0d;
+
+        // Calculate the standard deviation.
         for (int i = 1; i <= total; i++) {
             if (g.hasVertex(i)) {
                 sd += Math.pow((map.get(i).size() - meanEdge), 2);
@@ -412,6 +417,7 @@ public class FeatureExtractor {
         return res;
     }
 
+    // Calculates the entropy.
     private double calcEntropy(int[] counts, int total) {
         double entropy = 0;
         for (int count : counts) {
@@ -428,6 +434,7 @@ public class FeatureExtractor {
         return Math.sqrt((n/size));
     }
 
+    // Calculates the variation coefficient.
     public double calcCV(double sd, double mean) {
         if (mean == 0d) {
             return Double.MAX_VALUE;

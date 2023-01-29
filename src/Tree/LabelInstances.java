@@ -3,6 +3,7 @@ package Tree;
 import java.util.ArrayList;
 import java.util.List;
 
+// Not used anymore.
 public class LabelInstances {
 
     private final int label;

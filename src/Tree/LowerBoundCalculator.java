@@ -27,6 +27,7 @@ public class LowerBoundCalculator {
 
     private Archive[] archive;
 
+    // Similarity bounding is currently disabled due to the lower bound is based on the algorithm run times.
     public LowerBoundCalculator(int depth) {
         archive = new Archive[depth + 1];
         for (int i = 0; i < archive.length; i++) {

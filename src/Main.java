@@ -17,11 +17,11 @@ public class Main {
         //file = new File("Files/SAT/Solutions/SAT250.txt");
 
         // 48 features, 4 solutions, 105 instances.
-        file = new File("Files/GCP/Solutions/ASP.txt");
+        //file = new File("Files/GCP/Solutions/ASP.txt");
 
         // 37 features, 532 solutions, 1004 instances.
-        //file = new File("Files/MIP/Solutions/target.txt");
-        ASPDataset dataset = scanASPTxt(file, 4, 48);
+        file = new File("Files/MIP/Solutions/target.txt");
+        ASPDataset dataset = scanASPTxt(file, 532, 37);
 
         //file = new File("Files/Test/test.txt");
 
@@ -59,8 +59,8 @@ public class Main {
 
 */
 
-        int depth = 2;
-        int nodes = 3;
+        int depth = 3;
+        int nodes = 7;
         Branch rootBranch = new Branch();
         /*
         int sum = 0;
@@ -146,7 +146,7 @@ public class Main {
 
     // Scan ASP dataset file (has algorithm runtimes instead of labels).
     public static ASPDataset scanASPTxt(File file, int numOfSolutions, int numOfFeatures) {
-        int skip = 0;
+        int skip = 482;
         numOfSolutions = numOfSolutions - skip;
         ASPDataset dataset = new ASPDataset(numOfSolutions);
 
